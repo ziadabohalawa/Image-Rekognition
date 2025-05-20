@@ -11,7 +11,7 @@ It allows users to:
 
 ---
 
-## Architecture
+## System Architecture
 ![architecture_diagram](https://github.com/ziadabohalawa/Image-Rekognition/blob/14d54528baf7eacd2abd62c94d414e71f27c83a9/architecture_diagram.png)
 
 ## Technologies Used
