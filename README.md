@@ -25,7 +25,7 @@ It allows users to:
     ▼                   ▼
 [AWS Rekognition]   [S3 Bucket]
 ```
-🔧 Technologies Used
+## 🔧 Technologies Used
 Component	Service / Library
 Object Detection	Amazon Rekognition
 Storage	Amazon S3
@@ -35,7 +35,7 @@ Frontend	Flask
 Visualization	Pillow (PIL), OpenCV
 SDKs	Boto3, Requests
 
-📁 Project Structure
+## 📁 Project Structure
 ```
 rekognition-flask-app/
 ├── app.py                     # Flask app to interact with API + draw boxes
@@ -46,7 +46,7 @@ rekognition-flask-app/
 ├──   └── index.html             # HTML frontend form
 
 ```
-🚀 How It Works
+## 🚀 How It Works
 User enters the image path (key) from their S3 bucket.
 
 Flask app sends a POST request to an API Gateway endpoint.
@@ -57,7 +57,7 @@ Rekognition returns labels + bounding boxes.
 
 Flask downloads the image, draws results, and displays the annotated image.
 
-🧪 Local Setup
+## 🧪 Local Setup
 Clone this repository:
 
 ```
@@ -76,8 +76,8 @@ Open in browser:
 ```
 http://127.0.0.1:5000
 ```
-☁️ AWS Deployment (Serverless Backend)
-1. Lambda Setup
+## ☁️ AWS Deployment (Serverless Backend)
+### 1. Lambda Setup
 Create Lambda function rekognitionLabelFunction
 
 Runtime: Python 3.9
@@ -90,7 +90,7 @@ AmazonRekognitionFullAccess
 
 AmazonS3ReadOnlyAccess
 
-2. API Gateway
+### 2. API Gateway
 Create HTTP API
 
 Route: POST /detect
@@ -99,7 +99,7 @@ Integration: Lambda (rekognitionLabelFunction)
 
 Enable CORS if needed
 
-📷 Example Output
+## 📷 Example Output
 
 
 
