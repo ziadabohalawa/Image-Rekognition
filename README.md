@@ -11,20 +11,8 @@ It allows users to:
 ---
 
 ## Architecture
+![Object Detection with Amazon Rekognition_Flask.png]
 
-```text
-[User] ──> [Flask Web App]
-           │
-           ▼
-   [API Gateway HTTP Endpoint]
-           │
-           ▼
-       [AWS Lambda]
-           │
-    ┌──────┴────────────┐
-    ▼                   ▼
-[AWS Rekognition]   [S3 Bucket]
-```
 ## Technologies Used
 | Component        | Service / Library      |
 | ---------------- | ---------------------- |
