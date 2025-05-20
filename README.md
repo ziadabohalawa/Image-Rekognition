@@ -1,3 +1,109 @@
+# 🧠 AWS Rekognition Image Detection Viewer (Flask + Serverless)
+
+This project demonstrates how to build a lightweight, serverless computer vision pipeline using **Amazon Rekognition**, **AWS Lambda**, and **S3**, wrapped in a simple **Flask** web interface.
+
+It allows users to:
+- Select an image stored in S3
+- Trigger Rekognition to detect labels and objects
+- Overlay bounding boxes on the image
+- View the result in a browser
+
+---
+
+## 📌 Architecture
+
+```text
+[User] ──> [Flask Web App]
+           │
+           ▼
+   [API Gateway HTTP Endpoint]
+           │
+           ▼
+       [AWS Lambda]
+           │
+    ┌──────┴────────────┐
+    ▼                   ▼
+[AWS Rekognition]   [S3 Bucket]
+```
+🔧 Technologies Used
+Component	Service / Library
+Object Detection	Amazon Rekognition
+Storage	Amazon S3
+Compute	AWS Lambda
+API Gateway	AWS API Gateway (HTTP)
+Frontend	Flask
+Visualization	Pillow (PIL), OpenCV
+SDKs	Boto3, Requests
+
+📁 Project Structure
+```
+rekognition-flask-app/
+├── app.py                     # Flask app to interact with API + draw boxes
+├── lambda_function.py         # AWS Lambda handler (deployed separately)
+├── static/
+│   └── output.jpg             # Image with bounding boxes
+├── templates/
+├──   └── index.html             # HTML frontend form
+
+```
+🚀 How It Works
+User enters the image path (key) from their S3 bucket.
+
+Flask app sends a POST request to an API Gateway endpoint.
+
+The Lambda function reads the image path and sends it to Rekognition.
+
+Rekognition returns labels + bounding boxes.
+
+Flask downloads the image, draws results, and displays the annotated image.
+
+🧪 Local Setup
+Clone this repository:
+
+```
+git clone https://github.com/<yourusername>/rekognition-flask-app.git
+cd rekognition-flask-app
+```
+Install dependencies:
+```
+pip install flask boto3 pillow opencv-python requests
+```
+Run the Flask app:
+```
+python app.py
+```
+Open in browser:
+```
+http://127.0.0.1:5000
+```
+☁️ AWS Deployment (Serverless Backend)
+1. Lambda Setup
+Create Lambda function rekognitionLabelFunction
+
+Runtime: Python 3.9
+
+Upload lambda_function.py zipped as function.zip
+
+Attach policies:
+
+AmazonRekognitionFullAccess
+
+AmazonS3ReadOnlyAccess
+
+2. API Gateway
+Create HTTP API
+
+Route: POST /detect
+
+Integration: Lambda (rekognitionLabelFunction)
+
+Enable CORS if needed
+
+📷 Example Output
+
+
+
+
 # 🎯 Object-Detection Demo – Flask × API Gateway × Lambda × Rekognition
 
 Type an S3 image key → the app calls **Amazon Rekognition** through a lightweight **Lambda** endpoint → returns an annotated picture plus JSON labels & confidences.  
@@ -28,27 +134,23 @@ Edit
 
 ## 🧰 Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| UI & Backend | **Flask 2** (Python 3.10) |
-| Image Ops    | Pillow (PIL) |
-| Serverless   | **AWS Lambda** (Python run-time) |
-| API Gateway  | HTTP API – forwards to Lambda |
-| ML Service   | **Amazon Rekognition** (`detect_labels`) |
-| Storage      | **Amazon S3** (`images/…`) |
-| Compute node | **EC2 t3.micro** (or larger) |
+| Layer         | Technology |
+|---------------|------------|
+| Front-end     | Static HTML + JavaScript  |
+| Serverless Fn | **AWS Lambda** (Python 3.10) |
+| Public API    | **API Gateway** HTTP API |
+| ML Service    | **Amazon Rekognition** (`DetectLabels`) |
+| Storage       | **Amazon S3** (`images/…`) |
 
 ---
 
 ## 📋 Prerequisites
 
-| What | Minimum setup |
-|------|---------------|
-| **S3 bucket** | `<YOUR-BUCKET>/images/*.jpg`  |
-| **Lambda**    | Paste `lambda_handler.py` code & give it **`rekognition:DetectLabels`** |
-| **API Gateway** | HTTP API → integrate Lambda → public invoke URL `<API‐URL>` |
-| **EC2 security group** | Inbound TCP 22 (SSH) & 5000 (Flask) |
-| **IAM role on EC2** | `s3:GetObject` (read-only) on the bucket |
+| Resource | Minimum setup |
+|----------|---------------|
+| **S3 bucket** | `<BUCKET>/images/*.jpg` (keep private) |
+| **Lambda**    | Paste `lambda_handler.py` code.<br>Execution role permissions:<br>• `rekognition:DetectLabels`<br>• `s3:GetObject` (read originals) |
+| **API Gateway** | HTTP API → integrate Lambda → public HTTPS invoke URL `<API-URL>` |
 
 ---
 
@@ -58,13 +160,12 @@ Edit
 
 ```
 ssh -i my-key.pem ubuntu@<EC2-IP>
-git clone https://github.com/<your-user>/rekognition-demo.git
-cd rekognition-demo
-python3 -m venv venv && source venv/bin/activate
+git clone [https://github.com/<your-user>/rekognition-demo.git](https://github.com/ziadabohalawa/Image-Rekognition.git)
+cd image-rekognition
 ```
 ### 2 Install Python deps
 ```
-pip install -r requirements.txt   # Flask, boto3, Pillow, requests
+pip install -r requirements.txt
 ```
 ### 3 Run Flask app
 ```
@@ -80,7 +181,7 @@ Type an image key, e.g. images/dog.jpg → see bounding boxes & JSON.
 
 🗂 Project Layout
 ```
-rekognition-demo/
+image-rekognition/
 ├─ app.py              # Flask factory + drawing logic
 ├─ lambda_handler.py   # (deploy inside Lambda)
 ├─ templates/
