@@ -75,6 +75,4 @@ http://127.0.0.1:5000
 
 - Enable CORS if needed
 
-## Example Output
-
 
