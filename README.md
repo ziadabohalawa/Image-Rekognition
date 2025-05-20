@@ -1,6 +1,7 @@
 # AWS Rekognition Image Detection Viewer (Flask + Serverless)
 
 This project demonstrates how to build a lightweight, serverless computer vision pipeline using **Amazon Rekognition**, **AWS Lambda**, and **S3**, wrapped in a simple **Flask** web interface.
+![](https://github.com/ziadabohalawa/Image-Rekognition/blob/a3340121ea52083329d834734ec91b333c987c2d/output.jpg)
 
 It allows users to:
 - Select an image stored in S3
