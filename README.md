@@ -11,7 +11,7 @@ It allows users to:
 ---
 
 ## Architecture
-![architecture_diagram]([https://github.com/ziadabohalawa/Image-Rekognition.git/Object Detection with Amazon Rekognition_Flask.png](https://github.com/ziadabohalawa/Image-Rekognition/blob/06e3c344e21a8cf84c35b020796f14dd1ee521b8/architecture_diagram.png))
+![architecture_diagram](https://github.com/ziadabohalawa/Image-Rekognition/architecture_diagram.png)
 
 ## Technologies Used
 | Component        | Service / Library      |
