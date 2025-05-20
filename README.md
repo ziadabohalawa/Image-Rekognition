@@ -11,7 +11,7 @@ It allows users to:
 ---
 
 ## Architecture
-![architecture_diagram](https://github.com/ziadabohalawa/Image-Rekognition/architecture_diagram.png)
+![architecture_diagram](https://github.com/ziadabohalawa/Image-Rekognition/blob/27939cd1c664c732359effd77d1c71a91a69de21/architecture_diagram.png)
 
 ## Technologies Used
 | Component        | Service / Library      |
