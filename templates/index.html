@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Rekognition Viewer</title>
+</head>
+<body>
+    <h2>Rekognition Object Detection</h2>
+    <form method="POST">
+        <label>S3 Image Path (e.g. images/myfile.jpg):</label><br>
+        <input type="text" name="photo"><br><br>
+        <input type="submit" value="Detect">
+    </form>
+
+    {% if image_url %}
+        <h3>Result:</h3>
+        <img src="{{ image_url }}" style="max-width:600px;"><br>
+    {% endif %}
+</body>
+</html>
