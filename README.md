@@ -26,14 +26,16 @@ It allows users to:
 [AWS Rekognition]   [S3 Bucket]
 ```
 ## 🔧 Technologies Used
-Component	Service / Library
-Object Detection	Amazon Rekognition
-Storage	Amazon S3
-Compute	AWS Lambda
-API Gateway	AWS API Gateway (HTTP)
-Frontend	Flask
-Visualization	Pillow (PIL), OpenCV
-SDKs	Boto3, Requests
+| Component        | Service / Library      |
+| ---------------- | ---------------------- |
+| Object Detection | Amazon Rekognition     |
+| Storage          | Amazon S3              |
+| Compute          | AWS Lambda             |
+| API Gateway      | AWS API Gateway (HTTP) |
+| Frontend         | Flask                  |
+| Visualization    | Pillow (PIL), OpenCV   |
+| SDKs             | Boto3, Requests        |
+
 
 ## 📁 Project Structure
 ```
@@ -78,26 +80,26 @@ http://127.0.0.1:5000
 ```
 ## ☁️ AWS Deployment (Serverless Backend)
 ### 1. Lambda Setup
-Create Lambda function rekognitionLabelFunction
+- Create Lambda function rekognitionLabelFunction
 
-Runtime: Python 3.9
+- Runtime: Python 3.9
 
-Upload lambda_function.py zipped as function.zip
+- Upload lambda_function.py zipped as function.zip
 
-Attach policies:
+A- ttach policies:
 
-AmazonRekognitionFullAccess
+           - AmazonRekognitionFullAccess
 
-AmazonS3ReadOnlyAccess
+           - AmazonS3ReadOnlyAccess
 
 ### 2. API Gateway
-Create HTTP API
+- Create HTTP API
 
-Route: POST /detect
+- Route: POST /detect
+ 
+- Integration: Lambda (rekognitionLabelFunction)
 
-Integration: Lambda (rekognitionLabelFunction)
-
-Enable CORS if needed
+- Enable CORS if needed
 
 ## 📷 Example Output
 
