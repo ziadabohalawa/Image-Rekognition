@@ -81,16 +81,11 @@ http://127.0.0.1:5000
 ## ☁️ AWS Deployment (Serverless Backend)
 ### 1. Lambda Setup
 - Create Lambda function rekognitionLabelFunction
-
 - Runtime: Python 3.9
-
 - Upload lambda_function.py zipped as function.zip
-
-- ttach policies:
-
-- - AmazonRekognitionFullAccess
-
-- - AmazonS3ReadOnlyAccess
+- Attach policies:
+    - AmazonRekognitionFullAccess
+    - AmazonS3ReadOnlyAccess
 
 ### 2. API Gateway
 - Create HTTP API
