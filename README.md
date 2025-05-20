@@ -38,7 +38,7 @@ Rekognition returns labels + bounding boxes.
 
 Flask downloads the image, draws results, and displays the annotated image.
 
-## Local Setup
+## Setup
 Clone this repository:
 
 ```
