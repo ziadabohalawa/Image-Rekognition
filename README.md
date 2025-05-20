@@ -86,11 +86,11 @@ http://127.0.0.1:5000
 
 - Upload lambda_function.py zipped as function.zip
 
-A- ttach policies:
+- ttach policies:
 
-           - AmazonRekognitionFullAccess
+- - AmazonRekognitionFullAccess
 
-           - AmazonS3ReadOnlyAccess
+- - AmazonS3ReadOnlyAccess
 
 ### 2. API Gateway
 - Create HTTP API
