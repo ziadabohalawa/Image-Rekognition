@@ -1,92 +1,98 @@
-# 🐆📦 Object-Detection Demo on AWS (Flask + API Gateway → Lambda → Rekognition)
+# 🎯 Object-Detection Demo – Flask × API Gateway × Lambda × Rekognition
 
-A lightweight web app that lets you type an S3 image key, instantly calls **Amazon Rekognition** via a serverless **Lambda** function, and shows the picture with bounding boxes and confidence scores—all running on a tiny CPU EC2 instance.
+Type an S3 image key → the app calls **Amazon Rekognition** through a lightweight **Lambda** endpoint → returns an annotated picture plus JSON labels & confidences.  
+Runs happily on the smallest CPU EC2 instance.
 
 ---
 
-## 🏛️ Architecture
+## 🏛️ High-Level Architecture
 
-Browser Flask on EC2 API Gateway Lambda Rekognition
-┌────────┐ ① POST {key} ┌─────────────┐ ② forward JSON ┌─────────────┐ ③ detect_labels()
-│Upload │ ───────────────▶ │ app.py │ ────────────────▶│ handler.py │ ───────────────────▶
-│ form │ │ (Python) │ │ (Python) │
-└────────┘ │ downloads img│◀───────────────┐ └─────────────┘
-▲ │ draws boxes │ ④ JSON result │
-│ ⑥ HTML w/ <img> └─────┬────────┘ │
-│ │ │
-└───────────────────────────┴────────────────────────┘
-⑤ GET object from S3 bucket
+Browser EC2 (Flask) API Gateway Lambda Rekognition
+─────────┐ ┌─────────────┐ ┌────────────┐ ┌───────────┐ ┌───────────┐
+Upload │1. │POST /{key} │2. │proxy JSON │3. │detect_labels│──► │ ML model │
+form └──► │downloads img│──► │to Lambda │──► │return JSON │ └───────────┘
+▲ │draw boxes │ └────────────┘ └───────────┘
+│ │HTML result │
+│ └─────────────┘
+└─── 4. response (img + JSON) ────────────────┘
+
+S3 bucket
+├─ images/ (source jpg/png)
+└─ (bucket is private)
 
 yaml
 Copy
 Edit
 
-* **S3 bucket**  
-  `my-bucket-name/`  
-  &nbsp;&nbsp;&nbsp;&nbsp;└─ **images/** `example.jpg`, …
+---
 
-* **Security** – EC2 gets an IAM _role_ with `s3:GetObject` only.  
-  Lambda gets `rekognition:DetectLabels`.
+## 🧰 Tech Stack
+
+| Layer | Technology |
+|-------|------------|
+| UI & Backend | **Flask 2** (Python 3.10) |
+| Image Ops    | Pillow (PIL) |
+| Serverless   | **AWS Lambda** (Python run-time) |
+| API Gateway  | HTTP API – forwards to Lambda |
+| ML Service   | **Amazon Rekognition** (`detect_labels`) |
+| Storage      | **Amazon S3** (`images/…`) |
+| Compute node | **EC2 t3.micro** (or larger) |
 
 ---
 
-## 🚀 Quick Start
+## 📋 Prerequisites
 
-### 1  Clone & install on EC2
+| What | Minimum setup |
+|------|---------------|
+| **S3 bucket** | `<YOUR-BUCKET>/images/*.jpg`  |
+| **Lambda**    | Paste `lambda_handler.py` code & give it **`rekognition:DetectLabels`** |
+| **API Gateway** | HTTP API → integrate Lambda → public invoke URL `<API‐URL>` |
+| **EC2 security group** | Inbound TCP 22 (SSH) & 5000 (Flask) |
+| **IAM role on EC2** | `s3:GetObject` (read-only) on the bucket |
 
-```bash
+---
+
+## 🚀 Step-by-Step Setup
+
+### 1  SSH & clone repo
+
+```
+ssh -i my-key.pem ubuntu@<EC2-IP>
 git clone https://github.com/<your-user>/rekognition-demo.git
 cd rekognition-demo
 python3 -m venv venv && source venv/bin/activate
-pip install -r requirements.txt        # Flask, boto3, Pillow, requests
-2 Create / configure AWS resources
-Resource	Minimum setup
-S3	my-bucket-name/images/*.jpg (keep bucket private)
-Lambda	Runtime = Python 3.10
-Paste code from lambda_handler.py
-Environment: none needed
-API Gateway	HTTP API → integrate Lambda → public invoke URL
-IAM roles	EC2Role: s3:GetObject on bucket · LambdaRole: rekognition:DetectLabels
-
-3 Set environment & run Flask
-bash
-Copy
-Edit
-export FLASK_APP=app.py
+```
+### 2 Install Python deps
+```
+pip install -r requirements.txt   # Flask, boto3, Pillow, requests
+```
+### 3 Run Flask app
+```
 python app.py \
-  --bucket  my-bucket-name \
-  --api-url https://abc123.execute-api.eu-central-1.amazonaws.com/
-Flask listens on 0.0.0.0:5000 (adjust Security-Group to open port 5000).
+    --bucket  <YOUR-BUCKET> \
+    --api-url <API-URL> \
+    --debug
+# Flask binds to 0.0.0.0:5000
+```
+4 Open in browser
+```http://<EC2-PUBLIC-IP>:5000```
+Type an image key, e.g. images/dog.jpg → see bounding boxes & JSON.
 
-4 Browse
-cpp
-Copy
-Edit
-http://<EC2-PUBLIC-IP>:5000
-Enter images/example.jpg → get bounding-box overlay + confidence list.
-
-🗂️ Files
-File	Purpose
-app.py	Flask factory + image annotation logic
-lambda_handler.py	(Deployed inside Lambda) – calls rekognition.detect_labels
-templates/index.html	Simple form & result rendering
-static/output.jpg	Generated annotated image (overwritten each request)
-requirements.txt	Flask · requests · boto3 · Pillow
-
-🛠️ Tech Stack
-Layer	Technology
-Frontend	HTML + Jinja2
-Backend (web)	Flask 2
-Serverless API	AWS Lambda (Python 3.10)
-ML service	Amazon Rekognition
-Storage	Amazon S3
-Compute host	EC2 t3.micro / t3.small (only downloads & draws boxes)
-Imaging	Pillow (PIL)
-
+🗂 Project Layout
+```
+rekognition-demo/
+├─ app.py              # Flask factory + drawing logic
+├─ lambda_handler.py   # (deploy inside Lambda)
+├─ templates/
+│   └─ index.html      # form + result view
+├─ static/output.jpg   # generated file (runtime)
+├─ requirements.txt
+└─ README.md
+```
 🙏 Acknowledgements
-Amazon Rekognition – managed object-detection service
+Amazon Rekognition – fully managed vision APIs
 
-Flask (© Pallets) – BSD-licensed Python micro-framework
+Flask (© Pallets) – BSD-licensed micro-framework
 
-Pillow (PIL fork) – image processing library
+Pillow – the friendly PIL fork
 
